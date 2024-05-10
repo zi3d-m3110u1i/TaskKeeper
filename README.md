@@ -1,6 +1,6 @@
 # Task Keeper
 
-Task Keeper is a web-based task management application designed to help users organize their tasks efficiently. With Task Keeper, users can create tasks, assign categories, collaborate with others, and stay on top of their priorities.
+Task Keeper is a versatile web-based project management tool designed to streamline task organization and collaboration. With Task Keeper, users can create boards, lists, and cards, assign labels, collaborate with team members, and effectively manage projects.
 
 ## Features
 
