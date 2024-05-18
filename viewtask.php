@@ -93,18 +93,21 @@
             <form action="" method="post">
                 <table border="0" style="font-size: 14px; text-align: center; width: 100%">
                     <tr>
-                        <th width="30%">Created by</th>
-                        <th width="30%">Category</th>
-                        <th width="40%">Creation Date</th>
+                        <th>Created by</th>
+                        <th>Creation Date</th>
+                        <th>Category</th>
+                        
                     </tr>
                     <tr>
 
                         <td><?php if (isset($user)) echo ucfirst($user); ?></td>
+                        <td ><?php if (isset($datetime)) echo $datetime;?></td>
                         <td><?php if (isset($cat)) echo $cat; ?></td>
-                        <td colspan="2"><?php if (isset($datetime)) echo $datetime;?></td>
+                        
                     </tr>
                     <tr>
-                        <td><br></td>
+                        <td colspan="3"><br></td>
+                        
                     </tr>
                     <tr>
                         <th>
@@ -136,11 +139,11 @@
                     ?>
                     <tr>
                         <td ><?php if (isset($name)) echo $name; ?></td>
-                        <td  ><?php if (isset($priority)) echo "<span class='material-symbols-outlined' style=' font-size: 14px; user-select:none; text-align:center; color:".$color."'>fiber_manual_record</span> ".$priority; ?></td>
-                        <td ><?php if (isset($arr['Username'])) echo ucfirst($arr['Username']); else echo "--"; ?></td>
+                        <td><?php if (isset($priority)) echo "<span class='material-symbols-outlined' style=' font-size: 14px; user-select:none; text-align:center; color:".$color."'>fiber_manual_record</span> ".$priority; ?></td>
+                        <td><?php if (isset($arr['Username'])) echo ucfirst($arr['Username']); else echo "--"; ?></td>
                     </tr>
                     <tr>
-                        <td colspan="2"><br></td>
+                        <td colspan="3"><br></td>
                     </tr>
                     <tr>
                         <th colspan="3">Description</th>
