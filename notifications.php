@@ -121,6 +121,7 @@
             <!-- Display notifications here -->
             <div class="notifications">
                 <?php
+                	if (!empty($notifications)){
                     foreach ($notifications as $notif) {
                         echo "<div class='notification-item'>";
                         $user = ucfirst($notif['sender_username']);
@@ -134,6 +135,9 @@
                         echo "</span>";
                         echo "</div>";
                     }
+                }else{
+                	echo "<br><center><span class='material-symbols-outlined' style='font-size:40px; color:grey; user-select:none'>notifications_active</span><br><span style='color:grey; user-select:none'><b><p style='font-size:14px'>No notifications yet</p></b><p>When you get notifications, they'll show up here</p></span><br><button onClick='window.location.reload();' class='btn' style='background-color:#E8F2FF; color:#0A79E7; font-weight:600'>Refresh</button></center>";
+                }
                 ?>
             </div>
         </div>

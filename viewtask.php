@@ -114,7 +114,7 @@
                            Priority 
                         </th>
                         <th>
-                           Collaboration 
+                           Collaborators 
                         </th>
                     </tr>
                     <?php 
@@ -136,8 +136,8 @@
                     ?>
                     <tr>
                         <td ><?php if (isset($name)) echo $name; ?></td>
-                        <td colspan="1" ><?php if (isset($priority)) echo "<span class='material-symbols-outlined' style=' font-size: 14px; user-select:none; text-align:center; color:".$color."'>fiber_manual_record</span>".$priority; ?></td>
-                        <td colspan="1"><?php if (isset($arr['Username'])) echo ucfirst($arr['Username']); else echo "--"; ?></td>
+                        <td  ><?php if (isset($priority)) echo "<span class='material-symbols-outlined' style=' font-size: 14px; user-select:none; text-align:center; color:".$color."'>fiber_manual_record</span> ".$priority; ?></td>
+                        <td ><?php if (isset($arr['Username'])) echo ucfirst($arr['Username']); else echo "--"; ?></td>
                     </tr>
                     <tr>
                         <td colspan="2"><br></td>
