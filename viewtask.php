@@ -78,7 +78,7 @@
         </div>
 
         <div class="right-links">
-            <?php if ($_SESSION['admin'] == 1) echo "<a href='admin.php' style='text-decoration: none; color:black;'>Admin Panel</a>";?>
+            <?php if ($_SESSION['admin'] != 0) echo "<a href='admin.php' style='text-decoration: none; color:black;'>Admin Panel</a>";?>
             <a href="edit.php" style="text-decoration: none; color:black">Settings</a>
             <a href='notifications.php' style="color: black"><i class="bx bxs-bell bx-tada-hover bx-md" style="padding: 0 1rem 0 1rem">
                         <?php if (count($notifications) > 0) echo "<span style='font-size: 13px; position: absolute; background-color: red; color:white; border-radius: 0.5rem; padding: 2px'></span>";?>
