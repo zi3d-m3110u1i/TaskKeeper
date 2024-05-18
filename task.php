@@ -6,9 +6,10 @@
         header("Location: index.php");
         exit(); 
     }
-    /*$req = $pdo->prepare("SELECT count(notif_id) FROM notifications WHERE receiver = ?");
+
+    $req = $pdo->prepare("SELECT * FROM notifications WHERE receiver = ?");
     $req->execute([$_SESSION['id']]);
-    $notif = $req->fetch(PDO::FETCH_COLUMN);*/
+    $notifications = $req->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,9 +46,9 @@
         <div class="right-links" style="display: flex; flex-direction: row; ">
            <?php if ($_SESSION['admin'] == 1) echo "<a href='admin.php' style='text-decoration: none; color:black;'>Admin Panel</a>";?>
             <a href="edit.php" style="text-decoration: none; color:black">Settings</a>
-            <!-- <div class="icon">
-                    <i class="bx bxs-bell bx-tada-hover bx-md" style="padding: 0 1rem 0 1rem"><?php if ($notif > 0) echo "<span style='font-size: 13px; position: absolute; background-color: red; color:white; border-radius: 0.5rem; padding: 2px'></span>";?></i>
-                </div> -->
+            <a href='notifications.php' style="color: black"><i class="bx bxs-bell bx-tada-hover bx-md" style="padding: 0 1rem 0 1rem">
+                        <?php if (count($notifications) > 0) echo "<span style='font-size: 13px; position: absolute; background-color: red; color:white; border-radius: 0.5rem; padding: 2px'></span>";?>
+                    </i></a>
             <a href="php/logout.php"> <button class="btn">Log Out</button> </a>
         </div>
     </div>
@@ -58,18 +59,18 @@
             <form action="" method="post">
 
                 <div class="field input">
-                    <label for="task">Task Name*</label>
+                    <label for="task">Task Name<span style="color:red; font-weight: bold;">*</span></label>
                     <input type="text" name="task_name" id="task" autocomplete="off" maxlength="20" required>
                 </div>
 
                 <div class="field input">
-                    <label for="task">Task Description*</label>
+                    <label for="task">Task Description<span style="color:red; font-weight: bold;">*</span></label>
                     <textarea name="task_desc" id="task" rows="3" required></textarea>
                 </div>
 
                 <table border="0" width="100%" style="font-size: 13px">
                     <tr>
-                        <td width="50%"><label>Labels*</label></td>
+                        <td width="50%"><label>Labels<span style="color:red; font-weight: bold;">*</span></label></td>
                         <td style="padding-left: 10px;">Collaborators</td>
                     </tr>
                     <tr>

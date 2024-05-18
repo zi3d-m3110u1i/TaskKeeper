@@ -26,6 +26,11 @@ $query = $pdo->prepare("SELECT * FROM users LIMIT :offset, :usersPerPage");
 $query->bindValue(':offset', $offset, PDO::PARAM_INT);
 $query->bindValue(':usersPerPage', $usersPerPage, PDO::PARAM_INT);
 $query->execute();
+
+$req = $pdo->prepare("SELECT * FROM notifications WHERE receiver = ?");
+$req->execute([$_SESSION['id']]);
+$notifications = $req->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,6 +46,8 @@ $query->execute();
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Reddit+Mono:wght@200..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,1,0" />
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         body {
             font-family: 'Fira Sans', sans-serif;
@@ -70,6 +77,9 @@ $query->execute();
     <div class="right-links">
         <?php if ($_SESSION['admin'] == 1) echo "<a href='#' style='text-decoration: none; color:black;'>Admin Panel</a>"; ?>
         <a href="edit.php" style="text-decoration: none; color:black">Settings</a>
+                    <a href='notifications.php' style="color: black"><i class="bx bxs-bell bx-tada-hover bx-md" style="padding: 0 1rem 0 1rem">
+                        <?php if (count($notifications) > 0) echo "<span style='font-size: 13px; position: absolute; background-color: red; color:white; border-radius: 0.5rem; padding: 2px'></span>";?>
+                    </i></a>
         <a href="php/logout.php"> <button class="btn">Log Out</button> </a>
     </div>
 </div>
