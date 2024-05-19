@@ -1,5 +1,6 @@
 <?php 
      session_start();
+     ob_start();
 
     include("php/config.php");
     if(!isset($_SESSION['valid'])){
@@ -133,7 +134,8 @@
             }
 
             if($req){
-                header("Location: ./home.php");
+                ob_end_clean();
+                header("Location: home.php");
                 exit();
             } else {
                 echo "Error occurred while inserting task.";

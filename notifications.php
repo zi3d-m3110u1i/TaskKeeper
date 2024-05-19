@@ -17,6 +17,7 @@
       INNER JOIN category c ON co.cat_id = c.id
       WHERE n.receiver = ?
     ");
+    
     $stmt->execute([$_SESSION['id']]);
     $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -118,7 +119,6 @@
         <div class="box form-box">
             <header>Notifications <span class="material-symbols-outlined tooltip" style="float: right; user-select: none;">notifications</span></header>
             
-            <!-- Display notifications here -->
             <div class="notifications">
                 <?php
                 	if (!empty($notifications)){

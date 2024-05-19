@@ -20,8 +20,16 @@
     }
 
     if (isset($_GET['id'])){
-        $query= $pdo->prepare("SELECT datetime, task_name, task_msg, Username, cat_name, type, description FROM tasks t, users u, category c, collab co, labels l WHERE co.user_id = u.Id AND co.task_id = t.task_id AND l.type = t.priority_id AND co.task_id = ? AND co.user_id = ?");
+        $query = $pdo->prepare("SELECT t.datetime, t.task_name, t.task_msg, u.Username, c.cat_name, l.type, l.description 
+                        FROM tasks t
+                        JOIN collab co ON co.task_id = t.task_id
+                        JOIN users u ON co.user_id = u.Id
+                        JOIN category c ON co.cat_id = c.id
+                        JOIN labels l ON l.type = t.priority_id
+                        WHERE co.task_id = ? 
+                          AND co.user_id = ?");
         $query->execute([$_GET['id'], $_SESSION['id']]);
+
 
         while($arr = $query->fetch(PDO::FETCH_ASSOC)){
             $name = $arr['task_name'];
