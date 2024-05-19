@@ -40,6 +40,10 @@
 
     $req2 = $pdo->prepare("SELECT Username FROM users u, collab c WHERE u.Id = c.user_id AND task_id = ? ORDER BY cat_id ASC");
     
+    $reqq = $pdo->prepare("SELECT * FROM notifications WHERE receiver = ?");
+    $reqq->execute([$_SESSION['id']]);
+    $notifications = $reqq->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,6 +58,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         body {
             font-family: 'Fira Sans', sans-serif;
@@ -72,8 +78,11 @@
         </div>
 
         <div class="right-links">
-            <?php if ($_SESSION['admin'] == 1) echo "<a href='admin.php' style='text-decoration: none; color:black;'>Admin Panel</a>";?>
+            <?php if ($_SESSION['admin'] != 0) echo "<a href='admin.php' style='text-decoration: none; color:black;'>Admin Panel</a>";?>
             <a href="edit.php" style="text-decoration: none; color:black">Settings</a>
+            <a href='notifications.php' style="color: black"><i class="bx bxs-bell bx-tada-hover bx-md" style="padding: 0 1rem 0 1rem">
+                        <?php if (count($notifications) > 0) echo "<span style='font-size: 13px; position: absolute; background-color: red; color:white; border-radius: 0.5rem; padding: 2px'></span>";?>
+                    </i></a>
             <a href="php/logout.php"> <button class="btn">Log Out</button> </a>
         </div>
     </div>
@@ -84,18 +93,21 @@
             <form action="" method="post">
                 <table border="0" style="font-size: 14px; text-align: center; width: 100%">
                     <tr>
-                        <th width="30%">Created by</th>
-                        <th width="30%">Category</th>
-                        <th width="40%">Creation Date</th>
+                        <th>Created by</th>
+                        <th>Creation Date</th>
+                        <th>Category</th>
+                        
                     </tr>
                     <tr>
 
                         <td><?php if (isset($user)) echo ucfirst($user); ?></td>
+                        <td ><?php if (isset($datetime)) echo $datetime;?></td>
                         <td><?php if (isset($cat)) echo $cat; ?></td>
-                        <td colspan="2"><?php if (isset($datetime)) echo $datetime;?></td>
+                        
                     </tr>
                     <tr>
-                        <td><br></td>
+                        <td colspan="3"><br></td>
+                        
                     </tr>
                     <tr>
                         <th>
@@ -105,7 +117,7 @@
                            Priority 
                         </th>
                         <th>
-                           Collaboration 
+                           Collaborators 
                         </th>
                     </tr>
                     <?php 
@@ -127,11 +139,11 @@
                     ?>
                     <tr>
                         <td ><?php if (isset($name)) echo $name; ?></td>
-                        <td colspan="1" ><?php if (isset($priority)) echo "<span class='material-symbols-outlined' style=' font-size: 14px; user-select:none; text-align:center; color:".$color."'>fiber_manual_record</span>".$priority; ?></td>
-                        <td colspan="1"><?php if (isset($arr['Username'])) echo ucfirst($arr['Username']); else echo "--"; ?></td>
+                        <td><?php if (isset($priority)) echo "<span class='material-symbols-outlined' style=' font-size: 14px; user-select:none; text-align:center; color:".$color."'>fiber_manual_record</span> ".$priority; ?></td>
+                        <td><?php if (isset($arr['Username'])) echo ucfirst($arr['Username']); else echo "--"; ?></td>
                     </tr>
                     <tr>
-                        <td colspan="2"><br></td>
+                        <td colspan="3"><br></td>
                     </tr>
                     <tr>
                         <th colspan="3">Description</th>

@@ -103,7 +103,7 @@
         </div>
 
         <div class="right-links" style="display: flex; flex-direction: row; ">
-           <?php if ($_SESSION['admin'] == 1) echo "<a href='admin.php' style='text-decoration: none; color:black;'>Admin Panel</a>";?>
+           <?php if ($_SESSION['admin'] != 0) echo "<a href='admin.php' style='text-decoration: none; color:black;'>Admin Panel</a>";?>
             <a href="edit.php" style="text-decoration: none; color:black">Settings</a>
             <div class="icon">
                     <i class="bx bxs-bell bx-tada-hover bx-md" style="padding: 0 1rem 0 1rem">
@@ -121,6 +121,7 @@
             <!-- Display notifications here -->
             <div class="notifications">
                 <?php
+                	if (!empty($notifications)){
                     foreach ($notifications as $notif) {
                         echo "<div class='notification-item'>";
                         $user = ucfirst($notif['sender_username']);
@@ -134,6 +135,9 @@
                         echo "</span>";
                         echo "</div>";
                     }
+                }else{
+                	echo "<br><center><span class='material-symbols-outlined' style='font-size:40px; color:grey; user-select:none'>notifications_active</span><br><span style='color:grey; user-select:none'><b><p style='font-size:14px'>No notifications yet</p></b><p>When you get notifications, they'll show up here</p></span><button onClick='window.location.reload();' class='btn' style='background-color:#E8F2FF; color:#0A79E7; font-weight:600'>Refresh</button></center>";
+                }
                 ?>
             </div>
         </div>

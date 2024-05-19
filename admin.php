@@ -2,19 +2,25 @@
 session_start();
 
 include("php/config.php");
-if ($_SESSION['admin'] != 1) {
+if ($_SESSION['admin'] < 1) {
     header("Location: home.php");
     exit();
 }
 
-if (isset($_GET['grant'])){
-    $query = $pdo->prepare("UPDATE users SET Admin = '1' WHERE Id = ?");
-    $query->execute([$_GET['grant']]);
+if (isset($_GET['grant']) && $_SESSION['admin'] == 2) {
+    $userIdToGrant = intval($_GET['grant']);
+    if ($userIdToGrant !== $_SESSION['id']) {
+        $query = $pdo->prepare("UPDATE users SET Admin = 1 WHERE Id = ?");
+        $query->execute([$userIdToGrant]);
+    }
 }
 
-if (isset($_GET['revoke']) && $_GET['revoke'] != $_SESSION['id']){
-    $query = $pdo->prepare("UPDATE users SET Admin = '0' WHERE Id = ?");
-    $query->execute([$_GET['revoke']]);
+if (isset($_GET['revoke']) && $_SESSION['admin'] == 2) {
+    $userIdToRevoke = intval($_GET['revoke']);
+    if ($userIdToRevoke !== $_SESSION['id']) {
+        $query = $pdo->prepare("UPDATE users SET Admin = 0 WHERE Id = ?");
+        $query->execute([$userIdToRevoke]);
+    }
 }
 
 // Pagination variables
@@ -26,6 +32,11 @@ $query = $pdo->prepare("SELECT * FROM users LIMIT :offset, :usersPerPage");
 $query->bindValue(':offset', $offset, PDO::PARAM_INT);
 $query->bindValue(':usersPerPage', $usersPerPage, PDO::PARAM_INT);
 $query->execute();
+
+$req = $pdo->prepare("SELECT * FROM notifications WHERE receiver = ?");
+$req->execute([$_SESSION['id']]);
+$notifications = $req->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,6 +52,8 @@ $query->execute();
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Reddit+Mono:wght@200..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,1,0" />
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         body {
             font-family: 'Fira Sans', sans-serif;
@@ -68,13 +81,16 @@ $query->execute();
     </div>
 
     <div class="right-links">
-        <?php if ($_SESSION['admin'] == 1) echo "<a href='#' style='text-decoration: none; color:black;'>Admin Panel</a>"; ?>
+        <?php if ($_SESSION['admin'] >= 1) echo "<a href='#' style='text-decoration: none; color:black;'>Admin Panel</a>"; ?>
         <a href="edit.php" style="text-decoration: none; color:black">Settings</a>
+                    <a href='notifications.php' style="color: black"><i class="bx bxs-bell bx-tada-hover bx-md" style="padding: 0 1rem 0 1rem">
+                        <?php if (count($notifications) > 0) echo "<span style='font-size: 13px; position: absolute; background-color: red; color:white; border-radius: 0.5rem; padding: 2px'></span>";?>
+                    </i></a>
         <a href="php/logout.php"> <button class="btn">Log Out</button> </a>
     </div>
 </div>
 <center>
-<?php if (!isset($_GET['show']) || $_GET['show']!=2) {?>
+<?php if (!isset($_GET['show']) || $_GET['show'] != 2) {?>
 
     <table border="0">
         <tr>
@@ -98,15 +114,18 @@ $query->execute();
                 echo "<td style='padding: 10px;'>" . $arr['Id'] . "</td>";
                 echo "<td>" . ucfirst($arr['Username']) . "</td>";
                 echo "<td>" . $arr['Email'] . "</td>";
-                if ($arr['Admin'] != 1) {
+                if ($arr['Admin'] == 0) {
                     echo "<td style='color: red; user-select:none;' class='bold-text'>❌</td>";
-                    echo "<td width='20%'><a href='?grant=". $arr['Id'] ."' style='text-decoration:none; color:black;' class='bold-text'>Grant Admin</a></td>";
+                    if ($_SESSION['admin'] == 2 && $arr['Id'] != $_SESSION['id']) {
+                        echo "<td width='20%'><a href='?grant=" . $arr['Id'] . "' style='text-decoration:none; color:black;' class='bold-text'>Grant Admin</a></td>";
+                    } else {
+                        echo "<td></td>";
+                    }
                 } else {
                     echo "<td style='color: green; user-select:none;' class='bold-text'>✔</td>";
-                    if ($arr['Id']!=$_SESSION['id']){
-                        echo "<td width='20%'><a href='?revoke=". $arr['Id'] ."' style='text-decoration:none; color:black;' class='bold-text'>Revoke Admin</a></td>";
-                    }
-                    else{
+                    if ($_SESSION['admin'] == 2 && $arr['Id'] != $_SESSION['id']) {
+                        echo "<td width='20%'><a href='?revoke=" . $arr['Id'] . "' style='text-decoration:none; color:black;' class='bold-text'>Revoke Admin</a></td>";
+                    } else {
                         echo "<td></td>";
                     }
                 }
